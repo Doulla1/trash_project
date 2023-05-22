@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use PhpParser\Builder\Class_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Sensors;
@@ -11,14 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class SensorsController extends AbstractController
 {
-    /*#[Route('/sensors', name: 'app_sensors')]
-    public function index(): Response
-    {
-        return $this->render('sensors/index.html.twig', [
-            'controller_name' => 'SensorsController',
-        ]);
-    }
-	*/
 	public function __construct(EntityManagerInterface $sensorsManager)
 	{
 		$this->entityManager = $sensorsManager;
@@ -27,9 +21,9 @@ class SensorsController extends AbstractController
 	 /**
      * @Route("/sensors", methods={"GET"})
      */
-    public function index(EntityManagerInterface $sensorsManager): Response
+    public function index(): Response
     {
-        $sensors = $this->findAll();
+        $sensors = $this->entityManager->getRepository(Sensors::class)->findAll();
 
         return $this->json($sensors);
     }
@@ -42,13 +36,12 @@ class SensorsController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $sensors = new Sensors();
-        $sensors->setSensor1($data['sensor1']);
-        $sensors->setSensor2($data['sensor2']);
-        $sensors->setSensor3($data['sensor3']);
+        $sensors->setJoystick($data['joystick']);
+        $sensors->setUltrasound($data['ultrasound']);
+        $sensors->setSensorThree($data['button']);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($sensors);
-        $entityManager->flush();
+        $this->entityManager->persist($sensors);
+        $this->entityManager->flush();
 
         return $this->json($sensors, Response::HTTP_CREATED);
     }
@@ -56,17 +49,17 @@ class SensorsController extends AbstractController
     /**
      * @Route("/sensors/{id}", methods={"PUT"})
      */
-    public function update(Request $request, Sensors $sensors): Response
+    public function update(Request $request, Sensors $sensor, int $id): Response
     {
         $data = json_decode($request->getContent(), true);
+        $sensor2 = $this->entityManager->getRepository(Sensors::class)->find($id);
 
-        $sensors->setSensor1($data['sensor1']);
-        $sensors->setSensor2($data['sensor2']);
-        $sensors->setSensor3($data['sensor3']);
+        $sensor2->setJoystick($data['joystick']);
+        $sensor2->setUltrasound($data['ultrasound']);
+        $sensor2->setSensorThree($data['button']);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
+        $this->entityManager->flush();
 
-        return $this->json($sensors);
+        return $this->json($sensor2);
     }
 }

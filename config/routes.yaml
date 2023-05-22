@@ -15,3 +15,8 @@ sensors_create:
     path: /sensors/create
     controller: App\Controller\SensorsController::create
     methods: POST
+
+sensors_update:
+    path: /sensors/{id}
+    controller: App\Controller\SensorsController::update
+    methods: PUT

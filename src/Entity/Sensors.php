@@ -4,13 +4,8 @@ namespace App\Entity;
 
 use App\Repository\SensorsRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Routing\Annotation\Route;
 
-
-/**
- * @ORM\Entity()
- * @Route("/sensors")
- */
+#[ORM\Entity(repositoryClass: SensorsRepository::class)]
 class Sensors
 {
     #[ORM\Id]
@@ -18,14 +13,14 @@ class Sensors
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?float $joystick = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?float $ultrasound = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $sensor_tree = null;
+    #[ORM\Column]
+    private ?float $sensor_three = null;
 
     public function getId(): ?int
     {
@@ -37,7 +32,7 @@ class Sensors
         return $this->joystick;
     }
 
-    public function setJoystick(?float $joystick): self
+    public function setJoystick(float $joystick): self
     {
         $this->joystick = $joystick;
 
@@ -49,21 +44,21 @@ class Sensors
         return $this->ultrasound;
     }
 
-    public function setUltrasound(?float $ultrasound): self
+    public function setUltrasound(float $ultrasound): self
     {
         $this->ultrasound = $ultrasound;
 
         return $this;
     }
 
-    public function getSensorTree(): ?float
+    public function getSensorThree(): ?float
     {
-        return $this->sensor_tree;
+        return $this->sensor_three;
     }
 
-    public function setSensorTree(?float $sensor_tree): self
+    public function setSensorThree(float $sensor_three): self
     {
-        $this->sensor_tree = $sensor_tree;
+        $this->sensor_three = $sensor_three;
 
         return $this;
     }
